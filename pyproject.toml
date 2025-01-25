@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "liteboty-stream"
-version = "0.2.0"
+version = "0.2.1"
 description = ""
 authors = ["yejue <1145331931@qq.com>"]
 readme = "README.md"
@@ -13,11 +13,11 @@ PySide6 = "^6.8.1.1"
 redis = "^5.2.1"
 pillow = "^11.0.0"
 click = "^8.1.7"
-liteboty = ">=0.2, <0.3"
+liteboty = "*"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-liteboty-stream = "liteboty_stream.liteboty_stream:main"
+liteboty-stream = "liteboty_stream.cli:cli"

@@ -1,7 +1,5 @@
-import sys
-import click
 from PySide6.QtCore import Qt, QThread, Signal
-from PySide6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
 from PySide6.QtGui import QImage, QPixmap
 from .redis_subscriber import RedisSubscriber
 
@@ -64,17 +62,3 @@ class MainWindow(QWidget):
             self.update_image(pixmap)  # 更新图像大小以适应窗口
         super().resizeEvent(event)
 
-
-@click.command()
-@click.option('--broker', required=True, help="Redis broker address (e.g., 10.8.2.2:6379)")
-@click.option('--decode', default='RGB', help="Image decode format (e.g., RGB, L)")
-@click.option('--channel', required=True, help="Redis channel to subscribe to (e.g., /video/raw)")
-def main(broker, decode, channel):
-    app = QApplication(sys.argv)
-    window = MainWindow(broker, channel, decode)
-    window.show()
-    sys.exit(app.exec())
-
-
-if __name__ == "__main__":
-    main()

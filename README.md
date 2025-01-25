@@ -1,85 +1,77 @@
 # Liteboty Stream
 
-Liteboty Stream 是一个基于 PySide6 的实时图像流显示程序，使用 Redis 作为消息传递机制。该程序可以订阅 Redis 频道，接收图像流，并在 GUI 窗口中展示图像。
+Liteboty Stream 是一个基于 Redis 的视频流监控系统，可以订阅并显示来自 Redis 频道的视频流数据。
 
-## 特性
+## 功能特点
 
-- 订阅 Redis 频道并实时显示图像流
-- 支持动态调整窗口大小，图像自动按比例缩放
-- 简单易用的 PySide6 GUI 窗口
+- 支持多视频流同时显示
+- 提供图形界面和命令行两种使用方式
+- 支持多种图像解码格式（RGB、L等）
+- 窗口大小自适应调整
+- 支持窗口层叠和平铺排列
 
 ## 安装
 
-### 推荐安装方式（通过 `pip` 安装）
-
-您可以通过 `pip` 安装 `liteboty-stream`，这是最简便的安装方式：
-
+使用 pip 安装：
 ```bash
 pip install liteboty-stream
 ```
 
-### 从源码安装
+## 使用方法
 
-1. 克隆此项目：
+### 图形界面模式
 
-   ```bash
-   git clone https://github.com/yourusername/liteboty-stream.git
-   cd liteboty-stream
-   ```
-
-2. 创建一个虚拟环境并激活它：
-
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # 对于 Windows 用户，请使用 venv\Scripts\activate
-   ```
-
-3. 安装依赖：
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. 安装 Redis 并确保 Redis 服务正在运行。您可以按照[官方文档](https://redis.io/docs/getting-started/)安装 Redis。
-
-## 快速开始 (Quick Start)
-
-要启动 Liteboty Stream，使用以下命令启动应用程序：
-
+启动图形界面：
 ```bash
-liteboty-stream --broker <REDIS_BROKER> --decode <DECODE_FORMAT> --channel <CHANNEL>
+liteboty-stream ui
 ```
 
-### 参数说明：
 
-- `--broker`: Redis 服务器的地址和端口（例如 `10.8.2.2:6379`）
-- `--decode`: 图像解码格式（例如 `RGB` 或 `L`）
-- `--channel`: Redis 频道名称（例如 `/video/raw`）
+在图形界面中：
+1. 点击"新建视频流"按钮或使用快捷键 `Ctrl+N`
+2. 在弹出的对话框中填写：
+   - Redis 地址（例如：10.8.2.2:6379）
+   - 订阅频道（例如：/video/raw）
+   - 解码格式（默认：RGB）
+3. 点击"确定"添加新的视频流窗口
 
-### 示例：
+### 命令行模式
+
+直接启动单个视频流窗口：
 
 ```bash
-liteboty-stream --broker 10.8.2.128:6379 --decode RGB --channel /video/raw
+liteboty-stream run --broker 10.8.2.2:6379 --channel /video/raw --decode RGB
 ```
 
-### 运行后：
 
-1. 应用程序将连接到指定的 Redis 服务器和频道。
-2. 订阅的频道将发送图像数据，应用程序会将图像显示在窗口中。
-3. 您可以调整窗口的大小，图像将按比例缩放，并且窗口的最小尺寸会自动适应图像尺寸。
+参数说明：
+- `--broker`：Redis 服务器地址（必填）
+- `--channel`：Redis 订阅频道（必填）
+- `--decode`：图像解码格式，默认为 RGB
 
-## 代码结构
+## 快捷键
 
-- `liteboty_stream.py`：主应用程序代码，包含窗口显示、图像接收和缩放逻辑。
-- `redis_subscriber.py`：Redis 订阅者实现，负责从 Redis 获取图像数据。
-- `requirements.txt`：项目依赖的 Python 库。
+- `Ctrl+N`：新建视频流
+- `Ctrl+Q`：退出程序
 
-## 常见问题 (FAQ)
+## 系统要求
 
-### 1. 如何调整窗口大小？
+- Python 3.10 或更高版本
+- Redis 服务器
+- 支持的操作系统：Windows、Linux、macOS
 
-窗口会根据图像的大小动态调整，图像会按比例缩放以适应窗口大小。当您缩小窗口时，图像的大小也会变小。
+## 依赖项
 
-### 2. 如何处理图像的解码？
+- PySide6
+- Redis
+- Pillow
+- Click
+- Liteboty
 
-在启动时，您可以通过 `--decode` 参数指定图像解码格式。常见的格式有 `RGB` 和 `L`（灰度图像）。
+## 许可证
+
+本项目基于 MIT 许可证开源。
+
+## 问题反馈
+
+如果您在使用过程中遇到任何问题，请访问我们的 [GitHub 仓库](https://github.com/yejue/liteboty) 提交 Issue。
