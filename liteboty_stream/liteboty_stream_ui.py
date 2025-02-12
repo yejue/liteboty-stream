@@ -15,10 +15,12 @@ class NewStreamDialog(QDialog):
         layout = QFormLayout()
 
         self.broker = QLineEdit()
+        self.broker.setText("10.8.2.2:6379")
         self.broker.setPlaceholderText("例如: 10.8.2.2:6379")
         layout.addRow("Redis地址:", self.broker)
 
         self.channel = QLineEdit()
+        self.channel.setText("/video/raw")
         self.channel.setPlaceholderText("例如: /video/raw")
         layout.addRow("订阅频道:", self.channel)
 
@@ -100,5 +102,14 @@ class StreamUI(QMainWindow):
             # 创建新的视频流窗口
             sub_window = MainWindow(broker, channel, decode)
             mdi_window = self.mdi.addSubWindow(sub_window)
-            mdi_window.setWindowTitle(f"视频流 - {channel}")
+            mdi_window.setWindowTitle(f"视频流 - {broker} {channel}")
             mdi_window.show()
+
+
+if __name__ == '__main__':
+    import sys
+    from PySide6.QtWidgets import QApplication
+    app = QApplication(sys.argv)
+    window = StreamUI()
+    window.show()
+    sys.exit(app.exec())

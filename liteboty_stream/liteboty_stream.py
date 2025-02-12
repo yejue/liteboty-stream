@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt, QThread, Signal
-from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton
 from PySide6.QtGui import QImage, QPixmap
 from .redis_subscriber import RedisSubscriber
 
@@ -34,13 +34,34 @@ class MainWindow(QWidget):
         self.layout = QVBoxLayout()
         self.image_label = QLabel()
         self.layout.addWidget(self.image_label)
+
+        # 添加刷新按钮
+        self.refresh_button = QPushButton("刷新")
+        self.refresh_button.clicked.connect(self.restart_stream)
+        self.layout.addWidget(self.refresh_button)
+
         self.setLayout(self.layout)
 
+        self.broker = broker  # 保存 broker
+        self.channel = channel  # 保存 channel
+        self.decode_format = decode_format  # 保存 decode_format
+        self.start_stream()
+
+    def start_stream(self):
         # Initialize RedisSubscriber
-        redis_subscriber = RedisSubscriber(broker, channel, decode_format)
+        redis_subscriber = RedisSubscriber(self.broker, self.channel, self.decode_format)
         self.image_thread = ImageDisplayThread(redis_subscriber)
         self.image_thread.new_image_signal.connect(self.display_image)
         self.image_thread.start()
+
+    def restart_stream(self):
+        # 停止旧的线程
+        if hasattr(self, 'image_thread') and self.image_thread.isRunning():
+            self.image_thread.terminate()
+            self.image_thread.wait()
+
+        # 重新启动流
+        self.start_stream()
 
     def display_image(self, qimage):
         pixmap = QPixmap.fromImage(qimage)
@@ -61,4 +82,3 @@ class MainWindow(QWidget):
             self.setMinimumSize(image_size.width(), image_size.height())
             self.update_image(pixmap)  # 更新图像大小以适应窗口
         super().resizeEvent(event)
-
